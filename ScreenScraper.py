@@ -41,7 +41,7 @@ def get_screenshot_near_mouse() -> np.array:
     # get mouse position
     mouse_position = pyautogui.position()
     # get screenshot of area near mouse
-    local_screenshot = ImageGrab.grab(bbox=(mouse_position[0] - 75, mouse_position[1] - 25, mouse_position[0] + 75, mouse_position[1] + 25))
+    local_screenshot = ImageGrab.grab(bbox=(mouse_position[0] - 60, mouse_position[1] - 20, mouse_position[0] + 60, mouse_position[1] + 20))
     return np.array(local_screenshot)
 
 

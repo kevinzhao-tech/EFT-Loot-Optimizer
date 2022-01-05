@@ -1,7 +1,8 @@
 import unittest
 import ScreenScraper
 import cv2
-from PIL import Image
+import keyboard
+import mouse
 
 
 class TestScreenScraper(unittest.TestCase):
@@ -21,3 +22,9 @@ class TestScreenScraper(unittest.TestCase):
     def test_parse_screen(self):
         print(ScreenScraper.parse_screen(ScreenScraper.get_screenshots()))
 
+    def test_parse_click(self):
+        mouse.wait('left')
+        nearby = ScreenScraper.get_screenshot_near_mouse()
+        cv2.imshow("", nearby)
+        cv2.waitKey()
+        print(ScreenScraper.parse_click(nearby))

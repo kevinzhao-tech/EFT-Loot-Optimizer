@@ -9,3 +9,6 @@ class TestPytarkovdata(unittest.TestCase):
     def test_get_uid_fail(self):
         with self.assertRaises(Exception):
             pytarkovdata.get_uid('asdfg')
+
+    def test_get_optimal_trader_by_name(self):
+        assert pytarkovdata.get_optimal_trader_by_name('Day Pack')[0] == 'Ragman'

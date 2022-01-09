@@ -103,3 +103,15 @@ def parse_click(local_screenshot: np.array) -> str:
     text = read_text(screenshot_thresh)
     return text
 
+
+def item_detection(image: np.array) -> np.array:
+    """
+    Using object detection, finds items in the image
+    Args:
+        image: an np-array
+
+    Returns:
+        np array: image with items outlined
+    """
+    objects_found = cv2.CascadClassifier()
+

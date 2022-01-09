@@ -1,5 +1,5 @@
 import unittest
-import ScreenScraper
+import screenscraper.ScreenScraper as ScreenScraper
 import cv2
 import keyboard
 import mouse

@@ -1,6 +1,6 @@
 import keyboard
 import mouse
-import ScreenScraper
+import screenscraper.ScreenScraper as ScreenScraper
 import pytarkovdata
 
 

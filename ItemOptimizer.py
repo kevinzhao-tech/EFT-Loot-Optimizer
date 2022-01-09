@@ -1,9 +1,10 @@
 from Item import Item
 from PIL import Image
 import pytesseract
-import ScreenScraper
+import threading
+import screenscraper.ScreenScraper as ScreenScraper
 
-class ItemOptimizer:
+class ItemOptimizer(object):
     def __init__(self):
         self.inventory = []
         self.ground_items = []
@@ -30,5 +31,11 @@ class ItemOptimizer:
         Returns: a list of Item objects
         """
         return self.inventory.copy()
+
+    def main(self):
+        inventory_thread = threading.Thread(target=self.read_inventory)
+
+
+if __name__ == "__main__":
 
 

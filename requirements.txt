@@ -1,0 +1,9 @@
+opencv-python~=4.5.5.62
+keyboard~=0.13.5
+mouse~=0.7.1
+pytesseract~=0.3.8
+numpy~=1.22.0
+PyAutoGUI~=0.9.53
+Pillow~=9.0.0
+requests~=2.27.0
+pykson~=0.9.9.8.7

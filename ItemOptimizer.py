@@ -8,7 +8,6 @@ class ItemOptimizer(object):
     def __init__(self):
         self.inventory = []
         self.ground_items = []
-    def optimize(self):
 
     def read_inventory(self):
         """ Reads the loot from the screen and adds it to the inventory """

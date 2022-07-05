@@ -1,5 +1,5 @@
 import requests
-from Item import Item
+from typing import List
 from pykson import Pykson, JsonObject, IntegerField, StringField, ObjectListField
 
 """
@@ -21,73 +21,6 @@ def send_query(query) -> str:
         return response.json()
     else:
         raise Exception("Query failed - Code: {}".format(response.status_code))
-
-def used_in_tasks(uid):
-    """
-    gets the tasks for which the item is required for
-
-    Args:
-        uid: the UID of the item
-    Returns
-        task: list of tasks
-    """
-    new_query = '''
-    {{
-        item(id: "{}") {{
-
-        }}
-    }}
-    '''
-
-
-def get_optimal_trade(uid):
-    """
-    gets the optimal trader given an item UID
-
-    Args:
-        uid: the UID of the item
-
-    Returns:
-        the optimal trader for the item
-    """
-    new_query = '''
-    {{
-        item(id: "{}") {{
-            sellFor {{
-              vendor {{name}}
-              price
-            }}
-        }}
-    }}
-    '''
-    query_result = send_query(new_query.format(uid))
-
-    # get the name of the trader with the highest price
-    highest_price = 0
-    highest_trader = None
-    for price in query_result['data']['item']['sellFor']:
-        if price['price'] > highest_price:
-            highest_price = price['price']
-            highest_trader = price['vendor']['name']
-    # TODO account for flea market feesz
-    return highest_trader, highest_price
-
-
-def get_optimal_trader_by_name(item_name):
-    """
-    gets the optimal trader for an item given its name
-
-    Args:
-        item_name: the name of the item
-
-    Returns:
-        the optimal trader for the item
-
-    Raises:
-        Exception: if the item does not exist
-    """
-    uid = get_uid(item_name)
-    return get_optimal_trade(uid)
 
 
 def get_uid(item_name):
@@ -145,15 +78,3 @@ def get_list_of_UIDs(item_name):
     for item in query_result['data']['itemsByName']:
         uid_dict[item['name']] = item['id']
     return uid_dict
-
-
-if __name__ == '__main__':
-    """
-    This is a test of the API wrapper.
-    Given an item name, it will print the optimal trader and price.
-    """
-    name = input("Enter Item Name: ")
-    print(get_optimal_trader_by_name(name))
-    while True:
-        name = input("Enter Item Name: ")
-        print(get_optimal_trader_by_name(name))

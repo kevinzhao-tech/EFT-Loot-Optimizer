@@ -1,3 +1,4 @@
+import os
 from PIL import Image, ImageGrab
 import pytesseract
 import cv2
@@ -10,11 +11,6 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 A program to take screenshots of the screen and then use OCR to extract text from the image
 """
 
-screenshot = ImageGrab.grab()
-screenshot_width = screenshot.size[0]
-screenshot_height = screenshot.size[1]
-
-
 def get_screenshots() -> tuple:
     """
     Gets the screenshots of the the inventory and ground loot as np arrays
@@ -22,6 +18,9 @@ def get_screenshots() -> tuple:
         tuple: (inventory, ground loot) images
 
     """
+    screenshot = ImageGrab.grab()
+    screenshot_width = screenshot.size[0]
+    screenshot_height = screenshot.size[1]
     # take a screenshot of the middle third of the screen (inventory)
     inventory_offset = screenshot_width / 10
     inventory_screenshot = screenshot.crop((screenshot_width / 4 + inventory_offset, 0, 2 * screenshot_width / 4 + inventory_offset, screenshot_height))
@@ -45,6 +44,19 @@ def get_screenshot_near_mouse() -> np.array:
     return np.array(local_screenshot)
 
 
+def get_screenshot_tooltip() -> np.array:
+    """
+    Gets a screenshot of the tooltip
+    
+    Returns:
+        np.array: screenshot of the tooltip
+    """
+    # get mouse position
+    mouse_position = pyautogui.position()
+    tooltip_screenshot = ImageGrab.grab(bbox=(mouse_position[0] + 10, mouse_position[1] - 50, mouse_position[0] + 200, mouse_position[1] - 5))
+    tooltip_screenshot.show()
+    return np.array(tooltip_screenshot)
+
 def isolate_text(image) -> np.array:
     """
     Isolates the text from the image
@@ -57,7 +69,9 @@ def isolate_text(image) -> np.array:
     # convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     # apply thresholding to outlined text
-    ret, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+    ret, thresh = cv2.threshold(gray, 115, 255, cv2.THRESH_BINARY)
+    cv2.imshow('thresh', thresh)
+    cv2.waitKey(0)
     # apply some dilation and erosion to join text
     kernel = np.ones((1, 1), np.uint8)
     thresh = cv2.dilate(thresh, kernel, iterations=1)
@@ -74,7 +88,7 @@ def read_text(image) -> str:
     Returns:
         string: text of image
     """
-    return pytesseract.image_to_string(image, lang='eng', config='--psm 12')
+    return pytesseract.image_to_string(image, lang='eng', config='--user-words C:\\Users\\zhao1\\PycharmProjects\\EFT-Loot-Optimizer\\tarkovdata\\short_names.txt --psm 7')
 
 
 def parse_screen(screenshots: tuple) -> tuple:

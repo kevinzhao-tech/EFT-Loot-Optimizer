@@ -34,7 +34,3 @@ class ItemOptimizer(object):
     def main(self):
         inventory_thread = threading.Thread(target=self.read_inventory)
 
-
-if __name__ == "__main__":
-
-

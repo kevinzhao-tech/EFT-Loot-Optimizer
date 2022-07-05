@@ -2,6 +2,7 @@ import keyboard
 import mouse
 import screenscraper.ScreenScraper as ScreenScraper
 import pytarkovdata
+from Item import Item
 
 
 def start_polling_optimal_trader():
@@ -21,13 +22,14 @@ def poll_mouse_for_optimal_trader():
 
     mouse.wait('left')
     if keyboard.is_pressed('t'):
-        screenshot = ScreenScraper.get_screenshot_near_mouse()
+        screenshot = ScreenScraper.get_screenshot_tooltip()
 
         result = ScreenScraper.parse_click(screenshot)
         result = result.replace('\n', '')
         print(result)
         try:
-            return pytarkovdata.get_optimal_trader_by_name(result)
+            item = Item(pytarkovdata.get_uid(result))
+            return item.get_optimal_trader()
         except Exception as e:
             print(e)
 

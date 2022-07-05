@@ -16,11 +16,28 @@ def send_query(query) -> str:
     Returns:
         the response as a json object
     """
-    response = requests.post('https://tarkov-tools.com/graphql', json={'query': query})
+    response = requests.post('https://api.tarkov.dev/graphql', json={'query': query})
     if response.status_code == 200:
         return response.json()
     else:
         raise Exception("Query failed - Code: {}".format(response.status_code))
+
+def used_in_tasks(uid):
+    """
+    gets the tasks for which the item is required for
+
+    Args:
+        uid: the UID of the item
+    Returns
+        task: list of tasks
+    """
+    new_query = '''
+    {{
+        item(id: "{}") {{
+
+        }}
+    }}
+    '''
 
 
 def get_optimal_trade(uid):
@@ -36,9 +53,8 @@ def get_optimal_trade(uid):
     new_query = '''
     {{
         item(id: "{}") {{
-            name
-            traderPrices {{
-              trader {{name}}
+            sellFor {{
+              vendor {{name}}
               price
             }}
         }}
@@ -46,14 +62,14 @@ def get_optimal_trade(uid):
     '''
     query_result = send_query(new_query.format(uid))
 
-    # get the name of the trader with the lowest price
+    # get the name of the trader with the highest price
     highest_price = 0
     highest_trader = None
-    for price in query_result['data']['item']['traderPrices']:
+    for price in query_result['data']['item']['sellFor']:
         if price['price'] > highest_price:
             highest_price = price['price']
-            highest_trader = price['trader']['name']
-
+            highest_trader = price['vendor']['name']
+    # TODO account for flea market feesz
     return highest_trader, highest_price
 
 
